@@ -1,4 +1,4 @@
-import { getWithDefault } from '@ember/object';
+import { get } from '@ember/object';
 
 const DEFAULTS = {
   rootURL: '',
@@ -39,11 +39,17 @@ export default {
   routeAfterAuthentication: DEFAULTS.routeAfterAuthentication,
 
   load(config) {
-    this.rootURL = getWithDefault(config, 'rootURL', DEFAULTS.rootURL);
-    this.routeAfterAuthentication = getWithDefault(
-      config,
-      'routeAfterAuthentication',
-      DEFAULTS.routeAfterAuthentication
-    );
+    // TODO: ideal world would use ??
+    // see: https://deprecations.emberjs.com/v3.x/#toc_ember-metal-get-with-default
+    // this.rootURL = get(config, 'rootURL') ?? DEFAULTS.rootURL;
+    // this.routeAfterAuthentication =
+    //   get(config, 'routeAfterAuthentication') ??
+    //   DEFAULTS.routeAfterAuthentication;
+
+    let rootURL = get(config, 'rootURL');
+    this.rootURL = rootURL === undefined ? DEFAULTS.rootURL : rootURL;
+
+    let raa = get(config, 'routeAfterAuthentication');
+    this.routeAfterAuthentication = raa === undefined ? DEFAULTS.routeAfterAuthentication : raa;
   },
 };
